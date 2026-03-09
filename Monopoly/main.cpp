@@ -120,7 +120,6 @@ public:
         }
 
         nodeCount++;
-        //cout << nodeCount << endl;
 
         return true;
     }
@@ -138,24 +137,15 @@ public:
 
             addSpace(val);
             count++;
-
-            //cout << count << endl;
-            //cout << nodeCount << endl;
         }
 
         return count;
     }
 
-// -------------------------------
-// Core C: Traversal-Based Player Movement
-// -------------------------------
+    // -------------------------------
+    // Core C: Traversal-Based Player Movement
+    // -------------------------------
     void movePlayer(int steps) {
-        // TODO:
-        // - Move playerNode forward 'steps' times, node-by-node
-        // - Wrap naturally because list is circular
-        // - Detect and track passing GO:
-        // increment passGoCount when a move crosses from tail back to head
-        // - Must handle empty list safely
         if (headNode == nullptr) {
             return;
         }
@@ -170,30 +160,29 @@ public:
             if (playerNode->data.propertyName == "GO") {
                 passGoCount++;
             }
-            cout << "name:" << playerNode->data.propertyName << endl;
-            cout << "loop:" << i << endl;
-            cout << "go count" << passGoCount << endl;
         }
 
-        return;
     }
 
     int getPassGoCount() {
         return passGoCount;
     }
-// -------------------------------
-// Core D: Controlled Board Display
-// -------------------------------
+
+    // -------------------------------
+    // Core D: Controlled Board Display
+    // -------------------------------
     void printFromPlayer(int count) {
-        // TODO:
-        // - Print exactly 'count' nodes starting from playerNode
-        // - Must not infinite loop
-        // - Must handle empty list
-        // - Output must be deterministic and readable
-        cout << "printFromPlayer unwritten" << endl;
+
+        Node <T>* temp = playerNode;
+
+        for (int i = 0; i < count; i++) {
+            temp = temp->nextNode;
+        }
+
+        temp->data.print();
     }
 
-    // Optional helper: print full board once (one full cycle)
+
     void printBoardOnce() {
         if (headNode == nullptr) {
             return;
@@ -203,13 +192,10 @@ public:
 
         do{
             temp->data.print();
+            cout << endl;
             temp = temp->nextNode;
-            cout << "hello" << endl;
+
         }while (temp != headNode);
-
-
-
-        return;
     }
 
     // -------------------------------
@@ -225,6 +211,14 @@ public:
         // - Maintain circular link tail->next=head
         // - If playerNode points to deleted node, move playerNode to a safe node
         // - nodeCount--
+
+        if (headNode->data.propertyName == name) {
+            headNode = headNode->nextNode;
+            tailNode->nextNode = headNode;
+
+            return true;
+        }
+
         cout << "removeByName unwritten" << endl;
         return false;
     }
@@ -243,22 +237,37 @@ public:
 // -------------------------------
 // Advanced Option B (Level 2): Mirror the Board (Circular Reversal)
 // -------------------------------
-void mirrorBoard() {
-// TODO:
-// - Reverse the direction of the circular list by reversing next pointers
-// - Preserve circular structure
-// - Correctly handle empty list and single-node list
-// - Player cursor must remain on the same logical space after reversal
-cout << "mirrorBoard unwritten" << endl;
-}
+    void mirrorBoard() {
+
+        if (nodeCount <= 1) {
+            return;
+        }
+
+        Node <T> * prev = tailNode;
+        Node <T> * curr = headNode;
+        Node <T> * next = nullptr;
+
+        for (int i = 0; i < nodeCount; i++) {
+            next = curr->nextNode;
+            curr->nextNode = prev;
+            prev = curr;
+            curr = next;
+        }
+        curr = headNode;
+        headNode = tailNode;
+        tailNode = curr;
+
+
+    }
 // -------------------------------
 // Edge-case helper: countSpaces O(n)
 // -------------------------------
     int countSpaces() {
         // TODO:
-    // - Must be O(n), traverse exactly once with correct stop condition
-    // - Do NOT rely on nodeCount for this method
+        // - Must be O(n), traverse exactly once with correct stop condition
+        // - Do NOT rely on nodeCount for this method
         //cout << "countSpaces unwritten" << endl;
+
         return nodeCount;
     }
 // -------------------------------
@@ -296,17 +305,17 @@ int main() {
     //
     // NOTE: This starter calls addSpace once to show the intended API,
     // but your final submission should build a meaningful board.
-    board.addSpace(MonopolySpace("GO", "None", 0, 0));
-    board.addSpace(MonopolySpace("hey", "None", 0, 0));
-    board.addSpace(MonopolySpace("world", "None", 0, 0));
+    board.addSpace(MonopolySpace("0", "None", 0, 0));
+    board.addSpace(MonopolySpace("1", "None", 0, 0));
+    board.addSpace(MonopolySpace("2", "None", 0, 0));
 
     vector<MonopolySpace> testSpaces;
 
-    testSpaces.push_back(MonopolySpace("test 1", "None", 0, 0));
-    testSpaces.push_back(MonopolySpace("test 2", "none", 0, 0));
-    testSpaces.push_back(MonopolySpace("test 3", "none", 0, 0));
-    testSpaces.push_back(MonopolySpace("test 4", "none", 0, 0));
-    testSpaces.push_back(MonopolySpace("test 5", "none", 0, 0));
+    testSpaces.push_back(MonopolySpace("3", "None", 0, 0));
+    testSpaces.push_back(MonopolySpace("4", "none", 0, 0));
+    testSpaces.push_back(MonopolySpace("5", "none", 0, 0));
+    testSpaces.push_back(MonopolySpace("6", "none", 0, 0));
+    testSpaces.push_back(MonopolySpace("7", "none", 0, 0));
 
     int added = board.addMany(testSpaces);
 
@@ -336,7 +345,9 @@ int main() {
 // board.removeByName("Baltic Avenue");
 // vector<string> brownProps = board.findByColor("Brown");
 //
-// Option B example:
-// board.mirrorBoard();
-return 0;
+
+    board.mirrorBoard();
+    board.printBoardOnce();
+
+    return 0;
 }
