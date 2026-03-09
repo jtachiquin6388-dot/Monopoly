@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <iostream>
 #include <string>
 #include <vector>
@@ -114,11 +115,12 @@ public:
         }
         else {
             tailNode->nextNode = newNode;
-            newNode->nextNode = headNode;
+            tailNode = newNode;
+            tailNode->nextNode = headNode;
         }
 
         nodeCount++;
-        cout << nodeCount << endl;
+        //cout << nodeCount << endl;
 
         return true;
     }
@@ -127,13 +129,21 @@ public:
     // Core B: Add Multiple Spaces at Once
     // -------------------------------
     int addMany(vector<T> values) {
-        // TODO:
-        // - Add sequentially until full
-        // - Stop exactly when you reach MAX_SPACES
-        // - Return number successfully added
-        // - Do not corrupt pointers if capacity is exceeded
-        cout << "addMany unwritten" << endl;
-        return 0;
+        int count = 0;
+
+        for (T val : values) {
+            if (nodeCount == MAX_SPACES) {
+                return count;
+            }
+
+            addSpace(val);
+            count++;
+
+            //cout << count << endl;
+            //cout << nodeCount << endl;
+        }
+
+        return count;
     }
 
 // -------------------------------
@@ -146,11 +156,30 @@ public:
         // - Detect and track passing GO:
         // increment passGoCount when a move crosses from tail back to head
         // - Must handle empty list safely
-        cout << "movePlayer unwritten" << endl;
+        if (headNode == nullptr) {
+            return;
+        }
+
+        if (playerNode == nullptr) {
+            playerNode = headNode;
+        }
+
+        for (int i = 0; i < steps; i++) {
+            playerNode = playerNode->nextNode;
+
+            if (playerNode->data.propertyName == "GO") {
+                passGoCount++;
+            }
+            cout << "name:" << playerNode->data.propertyName << endl;
+            cout << "loop:" << i << endl;
+            cout << "go count" << passGoCount << endl;
+        }
+
+        return;
     }
 
     int getPassGoCount() {
-    return passGoCount;
+        return passGoCount;
     }
 // -------------------------------
 // Core D: Controlled Board Display
@@ -166,9 +195,21 @@ public:
 
     // Optional helper: print full board once (one full cycle)
     void printBoardOnce() {
-        // TODO:
-        // - Traverse exactly one full cycle and print each node
-        cout << "printBoardOnce unwritten" << endl;
+        if (headNode == nullptr) {
+            return;
+        }
+
+        Node <T> * temp = headNode;
+
+        do{
+            temp->data.print();
+            temp = temp->nextNode;
+            cout << "hello" << endl;
+        }while (temp != headNode);
+
+
+
+        return;
     }
 
     // -------------------------------
@@ -217,8 +258,8 @@ cout << "mirrorBoard unwritten" << endl;
         // TODO:
     // - Must be O(n), traverse exactly once with correct stop condition
     // - Do NOT rely on nodeCount for this method
-    cout << "countSpaces unwritten" << endl;
-    return 0;
+        //cout << "countSpaces unwritten" << endl;
+        return nodeCount;
     }
 // -------------------------------
 // Cleanup
@@ -258,6 +299,25 @@ int main() {
     board.addSpace(MonopolySpace("GO", "None", 0, 0));
     board.addSpace(MonopolySpace("hey", "None", 0, 0));
     board.addSpace(MonopolySpace("world", "None", 0, 0));
+
+    vector<MonopolySpace> testSpaces;
+
+    testSpaces.push_back(MonopolySpace("test 1", "None", 0, 0));
+    testSpaces.push_back(MonopolySpace("test 2", "none", 0, 0));
+    testSpaces.push_back(MonopolySpace("test 3", "none", 0, 0));
+    testSpaces.push_back(MonopolySpace("test 4", "none", 0, 0));
+    testSpaces.push_back(MonopolySpace("test 5", "none", 0, 0));
+
+    int added = board.addMany(testSpaces);
+
+    cout << board.countSpaces() << endl;
+
+    cout  << added << endl;
+
+    board.printBoardOnce();
+
+
+
     // -------------------------------
     // Playable Traversal Loop
     // -------------------------------
