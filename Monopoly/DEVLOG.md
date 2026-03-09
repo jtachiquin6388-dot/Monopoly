@@ -21,4 +21,13 @@
 
 ---
 
+### Entry 3
+**Date:** 2026-03-08
+**Entry Type:** Bug Fix
+**Task worked on:** mirrorBoard() Function
+**Issue or decision:** The function changed the linked list, so when trying to print the board, it caused an error. 
+**What I tried:** I iterated through the board to see the value of each node. 
+**Fix:** The tail pointer did not connect back to the head, causing issues when iterating through it. 
+
+---
 
