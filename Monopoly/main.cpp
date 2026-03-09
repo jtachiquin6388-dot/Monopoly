@@ -38,6 +38,12 @@ public:
         return false;
     }
     void print() {
+
+        cout << "Property name  : " << this->propertyName << endl;
+        cout << "Property color : " << this->propertyColor << endl;
+        cout << "Property value : " << this->value << endl;
+        cout << "Rent           : " << this->rent << endl;
+
         return;
     }
 };
@@ -93,14 +99,28 @@ public:
     // Core A: Add a Space with Capacity Enforcement
     // -------------------------------
     bool addSpace(T value) {
-        // TODO:
-        // - If nodeCount == MAX_SPACES return false (do not corrupt list)
-        // - Create new node
-        // - If empty list: head=tail=player=new, new->next=head
-        // - Else: tail->next=new, tail=new, tail->next=hea
-        // - nodeCount++
-        cout << "addSpace unwritten" << endl;
-        return false;
+        if (nodeCount == MAX_SPACES) {
+            return false;
+        }
+
+        Node <T>* newNode = new Node<T>(value);
+
+        if (headNode == nullptr) {
+            headNode = newNode;
+            tailNode = newNode;
+            playerNode = newNode;
+
+            cout << "head created"<< endl;
+        }
+        else {
+            tailNode->nextNode = newNode;
+            newNode->nextNode = headNode;
+        }
+
+        nodeCount++;
+        cout << nodeCount << endl;
+
+        return true;
     }
 
     // -------------------------------
@@ -236,6 +256,8 @@ int main() {
     // NOTE: This starter calls addSpace once to show the intended API,
     // but your final submission should build a meaningful board.
     board.addSpace(MonopolySpace("GO", "None", 0, 0));
+    board.addSpace(MonopolySpace("hey", "None", 0, 0));
+    board.addSpace(MonopolySpace("world", "None", 0, 0));
     // -------------------------------
     // Playable Traversal Loop
     // -------------------------------
