@@ -101,6 +101,7 @@ public:
     // -------------------------------
     bool addSpace(T value) {
         if (nodeCount == MAX_SPACES) {
+            cout << "limit reached" << endl;
             return false;
         }
 
@@ -172,6 +173,9 @@ public:
     // Core D: Controlled Board Display
     // -------------------------------
     void printFromPlayer(int count) {
+        if (playerNode == nullptr) {
+            return;
+        }
 
         Node <T>* temp = playerNode;
 
@@ -199,38 +203,8 @@ public:
     }
 
     // -------------------------------
-    // Advanced Option A (Level 1): removeByName
+    // Advanced Option B (Level 2): Mirror the Board (Circular Reversal)
     // -------------------------------
-    bool removeByName(string name) {
-        // TODO:
-        // - Delete FIRST matching node
-        // - Must handle:
-        // - deleting head
-        // - deleting tail
-        // - deleting the only-node list
-        // - Maintain circular link tail->next=head
-        // - If playerNode points to deleted node, move playerNode to a safe node
-        // - nodeCount--
-
-
-        cout << "removeByName unwritten" << endl;
-        return false;
-    }
-    // -------------------------------
-    // Advanced Option A (Level 1): findByColor
-    // -------------------------------
-    vector<string> findByColor(string color) {
-        // TODO:
-        // - Traverse ring exactly once
-        // - Collect matching names in vector<string>
-        // - Return matches
-        cout << "findByColor unwritten" << endl;
-        vector<string> matches;
-        return matches;
-    }
-// -------------------------------
-// Advanced Option B (Level 2): Mirror the Board (Circular Reversal)
-// -------------------------------
     void mirrorBoard() {
 
         if (nodeCount <= 1) {
@@ -253,26 +227,44 @@ public:
 
 
     }
-// -------------------------------
-// Edge-case helper: countSpaces O(n)
-// -------------------------------
+    // -------------------------------
+    // Edge-case helper: countSpaces O(n)
+    // -------------------------------
     int countSpaces() {
-        // TODO:
-        // - Must be O(n), traverse exactly once with correct stop condition
-        // - Do NOT rely on nodeCount for this method
-        //cout << "countSpaces unwritten" << endl;
 
-        return nodeCount;
+        if (headNode == nullptr) {
+            return 0;
+        }
+
+        int spaces = 1;
+        Node <T> * temp = headNode->nextNode;
+
+        while (temp != headNode) {
+            spaces++;
+
+            temp = temp->nextNode;
+        }
+
+        return spaces;
     }
-// -------------------------------
-// Cleanup
-// -------------------------------
+    // -------------------------------
+    // Cleanup
+    // -------------------------------
     void clear() {
-        // TODO:
-        // - Safely delete all nodes
-        // - Tip: if tailNode exists, break the cycle first: tailNode->nextNode = nullptr
-        // - Then delete like a normal singly linked list
-        cout << "clear unwritten" << endl;
+
+        tailNode->nextNode = nullptr;
+
+        Node <T> * curr = headNode;
+        Node <T> * next = nullptr;
+
+        while (curr != nullptr) {
+            next = curr->nextNode;
+            delete curr;
+            curr = next;
+        }
+
+        headNode = tailNode = playerNode = nullptr;
+        nodeCount = 0;
     }
 };
 // -------------------------------
@@ -299,19 +291,53 @@ int main() {
     //
     // NOTE: This starter calls addSpace once to show the intended API,
     // but your final submission should build a meaningful board.
-    board.addSpace(MonopolySpace("0", "None", 0, 0));
-    board.addSpace(MonopolySpace("1", "None", 0, 0));
-    board.addSpace(MonopolySpace("2", "None", 0, 0));
+    board.addSpace(MonopolySpace("GO", "None", 0, 0));
+    board.addSpace(MonopolySpace("Sunset Boulevard", "Orange", 180, 22));
+    board.addSpace(MonopolySpace("Harbor View", "Light Blue", 100, 8));
 
     vector<MonopolySpace> testSpaces;
 
-    testSpaces.push_back(MonopolySpace("3", "None", 0, 0));
-    testSpaces.push_back(MonopolySpace("4", "none", 0, 0));
-    testSpaces.push_back(MonopolySpace("5", "none", 0, 0));
-    testSpaces.push_back(MonopolySpace("6", "none", 0, 0));
-    testSpaces.push_back(MonopolySpace("7", "none", 0, 0));
+    testSpaces.push_back(MonopolySpace("Grand Theater District", "Red", 200, 20));
+    testSpaces.push_back(MonopolySpace("Maple Grove", "Brown", 60, 4));
+    testSpaces.push_back(MonopolySpace("Emerald Gardens", "Green", 280, 26));
+    testSpaces.push_back(MonopolySpace("Silver Springs", "Pink", 140, 14));
+    testSpaces.push_back(MonopolySpace("Roya Plaza", "Dark Blue", 350, 35));
+    testSpaces.push_back(MonopolySpace("Ocean View", "Light Blue", 100, 6));
+    testSpaces.push_back(MonopolySpace("Sunset Boulevard", "Orange", 180, 18));
+    testSpaces.push_back(MonopolySpace("Crystal Cove", "Yellow", 260, 22));
+    testSpaces.push_back(MonopolySpace("Golden Heights", "Yellow", 260, 22));
+    testSpaces.push_back(MonopolySpace("Riverwalk", "Light Blue", 120, 8));
+    testSpaces.push_back(MonopolySpace("Cedar Point", "Brown", 60, 2));
+    testSpaces.push_back(MonopolySpace("Broadway Avenue", "Red", 220, 20));
+    testSpaces.push_back(MonopolySpace("Harbor Street", "Pink", 160, 16));
+    testSpaces.push_back(MonopolySpace("Union Station", "Railroad", 200, 25));
+    testSpaces.push_back(MonopolySpace("Electric Company", "Utility", 150, 12));
+    testSpaces.push_back(MonopolySpace("Water Works", "Utility", 150, 12));
+    testSpaces.push_back(MonopolySpace("Parkside Lane", "Orange", 180, 18));
+    testSpaces.push_back(MonopolySpace("Liberty Square", "Red", 220, 20));
+    testSpaces.push_back(MonopolySpace("Highland Avenue", "Light Blue", 100, 6));
+    testSpaces.push_back(MonopolySpace("Midtown Crossing", "Pink", 140, 14));
+    testSpaces.push_back(MonopolySpace("Summit Ridge", "Green", 300, 28));
+    testSpaces.push_back(MonopolySpace("Boardwalk Heights", "Dark Blue", 400, 50));
+    testSpaces.push_back(MonopolySpace("Central Park Place", "Green", 280, 26));
+    testSpaces.push_back(MonopolySpace("Old Town Road", "Brown", 80, 4));
+    testSpaces.push_back(MonopolySpace("Grand Central", "Railroad", 200, 25));
+    testSpaces.push_back(MonopolySpace("Market Street", "Orange", 200, 16));
+    testSpaces.push_back(MonopolySpace("Sunrise Terrace", "Yellow", 240, 20));
+    testSpaces.push_back(MonopolySpace("Victory Lane", "Red", 240, 22));
+    testSpaces.push_back(MonopolySpace("Canyon Drive", "Pink", 160, 16));
+    testSpaces.push_back(MonopolySpace("Palm Estates", "Green", 320, 30));
+    testSpaces.push_back(MonopolySpace("King's Court", "Dark Blue", 350, 35));
+    testSpaces.push_back(MonopolySpace("Forest Hills", "Light Blue", 120, 8));
+    testSpaces.push_back(MonopolySpace("Lakeview Terrace", "Orange", 180, 18));
+    testSpaces.push_back(MonopolySpace("Heritage Square", "Yellow", 260, 22));
+    testSpaces.push_back(MonopolySpace("Grand Harbor", "Green", 300, 28));
+    testSpaces.push_back(MonopolySpace("Royal Gardens", "Pink", 140, 14));
+    testSpaces.push_back(MonopolySpace("Diamond District", "Dark Blue", 400, 50));
 
     int added = board.addMany(testSpaces);
+
+    board.addSpace(MonopolySpace("Skyline Plaza", "Purple", 150, 12));
 
     cout << board.countSpaces() << endl;
 
@@ -332,13 +358,6 @@ int main() {
         board.printFromPlayer(5);
         cout << "Times passed GO so far: " << board.getPassGoCount() << endl;
     }
-// -------------------------------
-// Advanced Feature Demos (students choose path)
-// -------------------------------
-// Option A examples:
-// board.removeByName("Baltic Avenue");
-// vector<string> brownProps = board.findByColor("Brown");
-//
 
     board.mirrorBoard();
     board.printBoardOnce();
