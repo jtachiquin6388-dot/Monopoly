@@ -212,12 +212,6 @@ public:
         // - If playerNode points to deleted node, move playerNode to a safe node
         // - nodeCount--
 
-        if (headNode->data.propertyName == name) {
-            headNode = headNode->nextNode;
-            tailNode->nextNode = headNode;
-
-            return true;
-        }
 
         cout << "removeByName unwritten" << endl;
         return false;
